@@ -22,8 +22,11 @@ class Object
 
   def redef_without_warning(const, value)
     mod = self.is_a?(Module) ? self : self.class
-    mod.send(:remove_const, const) if mod.const_defined?(const)
-    mod.const_set(const, value)
+    if defined?(const.constantize) and mod.const_defined?(const)
+      mod.send(:remove_const, const)
+    else
+      mod.const_set(const, value)
+    end
   end
 end
 
